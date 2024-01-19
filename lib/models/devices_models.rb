@@ -31,7 +31,6 @@ class DeviceCreateRequest
     end
 
     def self.from_hash(hash)
-      puts "data #{hash}"
       new(
         attributes: Attributes.from_hash(hash['attributes']), 
         type: hash['type']
