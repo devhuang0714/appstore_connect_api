@@ -161,7 +161,7 @@ class ProfilesParser < BaseParser
     OptionParser.new do |opts|
       opts.banner = 'Usage: profiles-delete [options]'
 
-      opts.on('-h', '--help', 'Display help for list tool') do
+      opts.on('-h', '--help', 'Display help for delete tool') do
         puts opts
         exit
       end
@@ -227,29 +227,51 @@ class ProfilesParser < BaseParser
         filter['fields[certificates]'] = value
       end
       
+      opts.on('--fields-devices FIELDS_DEVICES', '[string] Possible Values: addedDate, deviceClass, model, name, platform, status, udid') do |value|
+        filter['filter[devices]'] = value
+      end
+
+      opts.on('--fields-profiles FIELDS_PROFILES', '[string] Possible Values: bundleId, certificates, createdDate, devices, expirationDate, name, platform, profileContent, profileState, profileType, uuid') do |value|
+        filter['filter[profiles]'] = value
+      end
+
       opts.on('--filter-id FILTER_ID', '[string]') do |value|
         filter['filter[id]'] = value
       end
 
-      opts.on('--filter-serial-number FILTER_SERIAL_NUMBER', '[string]') do |value|
-        filter['filter[serialNumber]'] = value
+      opts.on('--filter-name FILTER_NAME', '[string]') do |value|
+        filter['filter[name]'] = value
+      end
+
+      opts.on('--include INCLUDE', '[string] Possible Values: bundleId, certificates, devices') do |value|
+        filter['include'] = value
       end
 
       opts.on('--limit LIMIT', 'integer Maximum Value: 200') do |value|
         filter['limit'] = value
       end
 
-      opts.on('--sort SORT', '[string] Possible Values: certificateType, -certificateType, displayName, -displayName, id, -id, serialNumber, -serialNumber') do |value|
-        filter['sort'] = value
+      opts.on('--limit-certificates LIMIT_CERTIFICATES', 'integer Maximum Value: 50') do |value|
+        filter['limit[certificates]'] = value
       end
 
-      opts.on('--certificate-type CERTIFICATE_TYPE', 'Possible Values: IOS_DEVELOPMENT, IOS_DISTRIBUTION, MAC_APP_DISTRIBUTION, MAC_INSTALLER_DISTRIBUTION, MAC_APP_DEVELOPMENT, DEVELOPER_ID_KEXT, DEVELOPER_ID_APPLICATION, DEVELOPMENT, DISTRIBUTION, PASS_TYPE_ID, PASS_TYPE_ID_WITH_NFC') do |value|
-        filter['filter[certificateType'] = value
+      opts.on('--limit-devices LIMIT_DEVICES', 'integer Maximum Value: 50') do |value|
+        filter['limit[devices]'] = value
       end
 
-      opts.on('--filter-display-name FILTER_DISPLAY_NAME', '[string]') do |value|
-        filter['filter[displayName]'] = value
+      opts.on('--fields-bundle-ids FIELDS_BUNDLE_IDS', '[string] Possible Values: app, bundleIdCapabilities, identifier, name, platform, profiles, seedId
+') do |value|
+        filter['fields[bundleIds]'] = value
       end
+
+      opts.on('--filter-profile-state FILTER_PROFILE_STATE', '[string] Possible Values: ACTIVE, INVALID') do |value|
+        filter['filter[profileState]'] = value
+      end
+
+      opts.on('--filter-profile-type FILTER_PROFILE_TYPE', '[string] Possible Values: IOS_APP_DEVELOPMENT, IOS_APP_STORE, IOS_APP_ADHOC, IOS_APP_INHOUSE, MAC_APP_DEVELOPMENT, MAC_APP_STORE, MAC_APP_DIRECT, TVOS_APP_DEVELOPMENT, TVOS_APP_STORE, TVOS_APP_ADHOC, TVOS_APP_INHOUSE, MAC_CATALYST_APP_DEVELOPMENT, MAC_CATALYST_APP_STORE, MAC_CATALYST_APP_DIRECT') do |value|
+        filter['filter[profileType]'] = value
+      end
+
     end.order!
     
     if token.nil?
@@ -257,8 +279,8 @@ class ProfilesParser < BaseParser
       exit
     end
     
-    certs = Certificates.new(token)
-    certs.list(filter)
+    profiles = Profiles.new(token)
+    profiles.list(filter)
   end
 
   def self.info
@@ -266,7 +288,7 @@ class ProfilesParser < BaseParser
     OptionParser.new do |opts|
       opts.banner = 'Usage: profiles-list [options]'
 
-      opts.on('-h', '--help', 'Display help for list tool') do
+      opts.on('-h', '--help', 'Display help for info tool') do
         puts opts
         exit
       end
@@ -312,7 +334,7 @@ class ProfilesParser < BaseParser
     OptionParser.new do |opts|
       opts.banner = 'Usage: profiles-download [options]'
 
-      opts.on('-h', '--help', 'Display help for list tool') do
+      opts.on('-h', '--help', 'Display help for download tool') do
         puts opts
         exit
       end
