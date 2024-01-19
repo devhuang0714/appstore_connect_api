@@ -19,11 +19,11 @@ class UsersParser < BaseParser
     end
 
     opts.on('--users-modify', 'Change a user\'s role, app visibility information, or other account details.') do
-      ARGV.unshift('users-download') 
+      ARGV.unshift('users-modify') 
     end
 
     opts.on('--users-remove', 'Remove a user from your team.') do
-      ARGV.unshift('users-delete') 
+      ARGV.unshift('users-remove') 
     end
   end
 
@@ -108,11 +108,19 @@ class UsersParser < BaseParser
       opts.separator 'Optional:'
       
       opts.on('--all-apps-visible ALL_APPS_VISIBLE', "Assigned user roles that determine the user's access to sections of App Store Connect and tasks they can perform.") do |value|
-        all_apps_visible = value
+        if value.downcase == 'true'
+          all_apps_visible = true
+        elsif value.downcase == 'false'
+          all_apps_visible = false
+        end
       end
 
       opts.on('--provisioning-allowed PROVISIONING_ALLOWED', "A Boolean value that indicates the user's specified role allows access to the provisioning functionality on the Apple Developer website.") do |value|
-        provisioning_allowed = value
+        if value.downcase == 'true'
+          provisioning_allowed  = true
+        elsif value.downcase == 'false'
+          provisioning_allowed = false
+        end
       end
 
       opts.on('--roles ROLES', "Assigned user roles that determine the user's access to sections of App Store Connect and tasks they can perform.\nPossible Values: ACCESS_TO_REPORTS, ACCOUNT_HOLDER, ADMIN, APP_MANAGER, CLOUD_MANAGED_APP_DISTRIBUTION, CLOUD_MANAGED_DEVELOPER_ID, CREATE_APPS, CUSTOMER_SUPPORT, DEVELOPER, FINANCE, IMAGE_MANAGER, MARKETING, SALES") do |value|
